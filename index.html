@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#08101d">
+<title>Smart Home Emergency System</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div><small>IOT SAFETY & SECURITY</small><h1>Smart Home Emergency System</h1><p>Remote monitoring and emergency control dashboard</p></div>
+  <div class="conn"><i id="dot"></i><div><b id="conn">ESP8266 Offline</b><span id="seen">Waiting for device</span></div></div>
+</header>
+
+<main>
+<section class="top">
+<div class="card"><div class="title">SYSTEM STATUS <em id="sysBadge">DISARMED</em></div>
+<h2 id="sys">System is safe</h2><p id="sysText">Emergency monitoring is currently disabled.</p>
+<div class="buttons"><button onclick="cmd('/api/arm')">ARM SYSTEM</button><button class="dark" onclick="cmd('/api/disarm')">DISARM</button></div></div>
+
+<div class="card"><div class="title">EMERGENCY ALARM <em id="alarmBadge">OFF</em></div>
+<h2 id="alarmText">Alarm inactive</h2><p>Use this control for emergency demonstration or testing.</p>
+<div class="buttons"><button class="red" onclick="cmd('/api/alarm/on')">ALARM ON</button><button class="dark" onclick="cmd('/api/alarm/off')">ALARM OFF</button></div></div>
+</section>
+
+<h3 class="section">LIVE SENSOR MONITORING</h3>
+<section class="sensors">
+<div class="card sensor"><span>F</span><div>FLAME<strong id="fire">SAFE</strong><small id="fireD">No fire detected</small></div></div>
+<div class="card sensor"><span>V</span><div>VIBRATION<strong id="vib">NORMAL</strong><small id="vibD">No vibration detected</small></div></div>
+<div class="card sensor"><span>D</span><div>DISTANCE<strong><b id="dist">0</b> cm</strong><small>HC-SR04</small></div></div>
+<div class="card sensor"><span>G</span><div>GATE<strong><b id="servo">0</b>°</strong><small id="gate">Closed</small></div></div>
+</section>
+
+<section class="cols">
+<div class="card"><div class="title">GATE CONTROL <em id="gateBadge">CLOSED</em></div>
+<div class="range"><span>0°</span><b id="angle">0°</b><span>180°</span></div>
+<input id="slider" type="range" min="0" max="180" value="0" oninput="angle(this.value)" onchange="setServo(this.value)">
+<div class="buttons"><button onclick="cmd('/api/gate/open')">OPEN GATE</button><button class="dark" onclick="cmd('/api/gate/close')">CLOSE GATE</button></div></div>
+
+<div class="card"><div class="title">FIRE WARNING <em class="warn">READY</em></div>
+<p>Play the DFPlayer warning sound connected to the Arduino.</p>
+<button class="warnBtn" onclick="cmd('/api/fire/sound')">PLAY FIRE WARNING</button></div>
+</section>
+
+<section class="cols">
+<div class="card"><div class="title">GPS LOCATION <em>GPS</em></div>
+<div class="data"><div>Latitude<b id="lat">0</b></div><div>Longitude<b id="lon">0</b></div><div>Satellites<b id="sat">0</b></div><div>Speed<b><span id="speed">0</span> km/h</b></div></div>
+<button class="dark full" onclick="map()">OPEN LOCATION</button></div>
+
+<div class="card"><div class="title">MPU6050 <em>MOTION</em></div>
+<div class="mpu" id="mpu"></div></div>
+</section>
+
+<h3 class="section">ESP32-CAM</h3>
+<div class="card">
+<div id="camBox" class="camera"><b>ESP32-CAM LIVE VIEW</b><span>Enter your camera URL below.</span></div>
+<iframe id="cam" hidden title="ESP32-CAM"></iframe>
+<div class="camControl"><input id="camUrl" placeholder="http://ESP32-CAM-IP"><button onclick="loadCam()">LOAD CAMERA</button></div>
+</div>
+
+<h3 class="section">DEVICE CONNECTION</h3>
+<div class="card">
+<div class="device"><div>Connection<b id="dev">Offline</b></div><div>Last update<b id="last">Never</b></div><div>Backend<b>Render</b></div></div>
+<p class="note">The public website communicates with the Render server. The ESP8266 connects outbound to Render; the website does not directly access a private 192.168.x.x address.</p>
+</div>
+</main>
+<footer>Smart Home Emergency System · Arduino Uno + ESP8266 + ESP32-CAM</footer>
+<div id="toast"></div>
+</div>
+<script src="/app.js"></script>
+</body>
+</html>
